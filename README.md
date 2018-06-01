@@ -21,6 +21,7 @@ Group work
 设置邮箱：git config --global user.email "xxx@pku.edu.cn"  
 然后  
 git clone https://github.com/Steven-Sakurai/Paper.io  
+cd Paper.io  
 git pull origin master  
 添加文件  
 touch xxx.py  
