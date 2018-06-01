@@ -16,14 +16,14 @@ Group work
 ## 判断对方风格
 一凡队长
 
-## git 使用说明
-先下载git
-设置邮箱：git config --global user.email "xxx@pku.edu.cn"
-然后
-git clone https://github.com/Steven-Sakurai/Paper.io
-git pull origin master
-添加文件
-touch xxx.py
-git add -A
-git commit -m "一些信息"
-git push origin master
+## git 使用说明  
+先下载git  
+设置邮箱：git config --global user.email "xxx@pku.edu.cn"  
+然后  
+git clone https://github.com/Steven-Sakurai/Paper.io  
+git pull origin master  
+添加文件  
+touch xxx.py  
+git add -A  
+git commit -m "一些信息"  
+git push origin master  
