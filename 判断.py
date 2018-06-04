@@ -51,14 +51,14 @@ def enemytype(stat):
 		3：遍激进
 		4：很激进
 	'''
-	len = len(stat['log'])
+	length = len(stat['log'])
 	l = len(stat['log'])
 	if l > 30:   # 取之前30步对手纸卷头到对手领地的距离；如果还不到30步，就取当前已经走过的步数
 		l = 30
 		
 	dislist = []
 	for i in range(l):
-		time = len - i - 1
+		time = length - i - 1
 		x = stat['log'][time]['enemy']['x']
 		y = stat['log'][time]['enemy']['y']
 		id = stat['log'][time]['enemy']['id']
