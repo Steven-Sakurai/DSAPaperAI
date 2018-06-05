@@ -16,6 +16,12 @@ Group work
 ## 判断对方风格
 一凡队长
 
+## 如何增强normal wanderer  
+- 在领地内wander时，尽量靠边    
+- 尽量圈别人地  
+- 如果领先很多，贴防
+
+
 ## git 使用说明  
 先下载git  
 设置邮箱：git config --global user.email "xxx@pku.edu.cn"  
