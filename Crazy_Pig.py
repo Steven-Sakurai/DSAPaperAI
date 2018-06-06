@@ -195,14 +195,14 @@ def load(stat, storage):
             storage['count'] = randrange(1, 3)
 
             myField = storage['myField']
-            mypos = storage['my_pos']
+            my_pos = storage['my_pos']
             hisPos = storage['enemy_pos']
-            hisDist = np.sum(np.abs(myPos - hisPos))
+            hisDist = np.sum(np.abs(my_pos - hisPos))
     
             enemy_field = np.c_[np.where(myField == 3)]
             min_dis = 10000
             for ep in enemy_field:
-                thedis = np.sum(np.abs(ep - myPos))
+                thedis = np.sum(np.abs(ep - my_pos))
                 if thedis < min_dis:
                     min_dis = thedis
             if hisDist < 20:
