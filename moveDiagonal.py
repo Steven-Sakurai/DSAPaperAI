@@ -19,7 +19,6 @@ stat:
                 direction: 0, 1, 2, 3
 '''
 import numpy as np
-
 def is_move_possible(stat, move):
     '''
     need to judge:
@@ -117,11 +116,10 @@ class ActionL:
 class ActionDiagonal:
     # risky : 0 ~ ?
     # dir: [+-1, +-1]
-    def __init__(self, stat_, risky_, big_direction_, ntimes_):
+    def __init__(self, stat_, risky_, big_direction_):
         self.stat = stat_
         self.risky = risky 
         self.big_direction = big_direction_
-        self.ntimes = ntimes_
         self.count = 0
 
         self.step = 4*risky + 1
@@ -130,7 +128,7 @@ class ActionDiagonal:
         
         if big_direction_ == 0:
             self.direction = np.array([1, 1])
-        elif big_direction_ == 1
+        elif big_direction_ == 1:
             self.direction = np.array([-1, 1])
         elif big_direction == 2:
             self.direction = np.array([-1, -1])
@@ -155,7 +153,6 @@ class ActionDiagonal:
             self.actionL.init()
             return self.actionL.makeMove()
 
-# need to initialize this
 def load(stat, storage):
     storage['Action'] = None
 
@@ -165,7 +162,7 @@ def play(stat, storage):
     if storage['Action'] is not None:
         action_Now = storage['Action']
     else:
-        storage['Action'] = ActionDiagonal(stat, 1, 0, 5)
+        storage['Action'] = ActionDiagonal(stat, 1, 0)
         action_Now = storage['Action']
         action_Now.init()
     if safe:
