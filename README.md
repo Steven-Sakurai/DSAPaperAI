@@ -20,6 +20,123 @@ Group work
 - 主要是118行那个20可以调下  
 - 还有202-218  
 
+#### 目前效果
+连续跑五次knockout
+
+```bash
++----+------------------------+----------------+-----------+
+Knockout Result: Crazy_Pig wins.
+AI_normal_wanderer 3 : 11 Crazy_Pig
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 |     (B) Crazy_Pig      |  (1020, 1262)  | END, 4000 |
+|  2 |     (A) Crazy_Pig      |  (1258, 1182)  | END, 4000 |
+|  3 |     (B) Crazy_Pig      |  (1219, 1638)  | END, 4000 |
+|  4 |     (A) Crazy_Pig      |  (1666, 845)   | END, 4000 |
+|  5 |     (B) Crazy_Pig      |  (970, 1452)   | END, 4000 |
+|  6 | (B) AI_normal_wanderer |       KO       | TAP, 1437 |
+|  7 | (A) AI_normal_wanderer |  (1810, 1599)  | END, 4000 |
+|  8 |     (A) Crazy_Pig      |       KO       | TAP, 3483 |
+|  9 |     (B) Crazy_Pig      |  (837, 1884)   | END, 4000 |
+| 10 |     (A) Crazy_Pig      |  (2373, 1274)  | END, 4000 |
+| 11 |     (B) Crazy_Pig      |  (1343, 2191)  | END, 4000 |
+| 12 | (B) AI_normal_wanderer |       KO       | TAP, 2675 |
+| 13 |     (B) Crazy_Pig      |  (1145, 2439)  | END, 4000 |
+| 14 |     (A) Crazy_Pig      |  (1554, 1367)  | END, 4000 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
+
++----+------------------------+----------------+-----------+
+Knockout Result: Crazy_Pig wins.
+AI_normal_wanderer 1 : 11 Crazy_Pig
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 |     (B) Crazy_Pig      |  (1106, 1991)  | END, 4000 |
+|  2 |     (A) Crazy_Pig      |  (1807, 1088)  | END, 4000 |
+|  3 |     (B) Crazy_Pig      |  (847, 2067)   | END, 4000 |
+|  4 |     (A) Crazy_Pig      |  (1899, 1149)  | END, 4000 |
+|  5 |     (B) Crazy_Pig      |       KO       | CIT, 2611 |
+|  6 |     (A) Crazy_Pig      |  (1545, 1200)  | END, 4000 |
+|  7 | (A) AI_normal_wanderer |       KO       | ERR, 3663 |
+|  8 |     (A) Crazy_Pig      |       KO       | TAP, 2778 |
+|  9 |     (B) Crazy_Pig      |  (892, 1393)   | END, 4000 |
+| 10 |     (A) Crazy_Pig      |  (2075, 1139)  | END, 4000 |
+| 11 |     (B) Crazy_Pig      |       KO       | TAP, 2407 |
+| 12 |     (A) Crazy_Pig      |       KO       | TAP, 2980 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
+
++----+------------------------+----------------+-----------+
+Knockout Result: Crazy_Pig wins.
+AI_normal_wanderer 2 : 11 Crazy_Pig
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 |     (B) Crazy_Pig      |  (1017, 1468)  | END, 4000 |
+|  2 |     (A) Crazy_Pig      |  (2021, 1194)  | END, 4000 |
+|  3 |     (B) Crazy_Pig      |  (1354, 1454)  | END, 4000 |
+|  4 | (B) AI_normal_wanderer |       KO       | TAP, 3440 |
+|  5 |     (B) Crazy_Pig      |  (1141, 2293)  | END, 4000 |
+|  6 |     (A) Crazy_Pig      |       KO       | TAP, 1944 |
+|  7 |     (B) Crazy_Pig      |  (1189, 2012)  | END, 4000 |
+|  8 | (B) AI_normal_wanderer |       KO       | CIT, 3970 |
+|  9 |     (B) Crazy_Pig      |  (1111, 1260)  | END, 4000 |
+| 10 |     (A) Crazy_Pig      |  (1418, 991)   | END, 4000 |
+| 11 |     (B) Crazy_Pig      |  (935, 1283)   | END, 4000 |
+| 12 |     (A) Crazy_Pig      |  (1483, 652)   | END, 4000 |
+| 13 |     (B) Crazy_Pig      |  (745, 1746)   | END, 4000 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
+
++----+------------------------+----------------+-----------+
+Knockout Result: Crazy_Pig wins.
+AI_normal_wanderer 5 : 11 Crazy_Pig
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 | (A) AI_normal_wanderer |       KO       | TAP, 1045 |
+|  2 |     (A) Crazy_Pig      |       KO       | TAP, 3580 |
+|  3 |     (B) Crazy_Pig      |       KO       | TAP, 3129 |
+|  4 |     (A) Crazy_Pig      |  (1657, 1227)  | END, 4000 |
+|  5 |     (B) Crazy_Pig      |  (1069, 1638)  | END, 4000 |
+|  6 |     (A) Crazy_Pig      |  (1381, 984)   | END, 4000 |
+|  7 |     (B) Crazy_Pig      |  (1012, 1627)  | END, 4000 |
+|  8 | (B) AI_normal_wanderer |       KO       | ERR, 2386 |
+|  9 | (A) AI_normal_wanderer |       KO       | ERR, 3249 |
+| 10 |     (A) Crazy_Pig      |  (1579, 1157)  | END, 4000 |
+| 11 | (A) AI_normal_wanderer |  (1513, 1382)  | END, 4000 |
+| 12 |     (A) Crazy_Pig      |  (1460, 1140)  | END, 4000 |
+| 13 |     (B) Crazy_Pig      |       KO       | TAP, 2591 |
+| 14 | (B) AI_normal_wanderer |       KO       | TAP, 2043 |
+| 15 |     (B) Crazy_Pig      |  (990, 1636)   | END, 4000 |
+| 16 |     (A) Crazy_Pig      |       KO       | TAP, 3482 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
+
++----+------------------------+----------------+-----------+
+Knockout Result: Crazy_Pig wins.
+AI_normal_wanderer 1 : 11 Crazy_Pig
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 |     (B) Crazy_Pig      |  (987, 1488)   | END, 4000 |
+|  2 |     (A) Crazy_Pig      |  (1828, 1360)  | END, 4000 |
+|  3 | (A) AI_normal_wanderer |       KO       | ERR, 2675 |
+|  4 |     (A) Crazy_Pig      |  (1908, 992)   | END, 4000 |
+|  5 |     (B) Crazy_Pig      |  (1079, 1663)  | END, 4000 |
+|  6 |     (A) Crazy_Pig      |  (1933, 974)   | END, 4000 |
+|  7 |     (B) Crazy_Pig      |       KO       | TAP, 1242 |
+|  8 |     (A) Crazy_Pig      |  (2064, 1247)  | END, 4000 |
+|  9 |     (B) Crazy_Pig      |  (1073, 1424)  | END, 4000 |
+| 10 |     (A) Crazy_Pig      |       KO       | TAP, 1772 |
+| 11 |     (B) Crazy_Pig      |  (966, 2084)   | END, 4000 |
+| 12 |     (A) Crazy_Pig      |  (1813, 967)   | END, 4000 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
+```
+
 ## git 使用说明  
 先下载git  
 设置邮箱：git config --global user.email "xxx@pku.edu.cn"  

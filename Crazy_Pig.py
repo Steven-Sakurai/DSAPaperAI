@@ -205,11 +205,11 @@ def load(stat, storage):
                 thedis = np.sum(np.abs(ep - my_pos))
                 if thedis < min_dis:
                     min_dis = thedis
-            if hisDist < 20:
-                conserv = 5
-            elif min_dis < hisDist / 4:
+            if hisDist < 10:
+                conserv = 6
+            elif min_dis < hisDist / 8:
                 conserv = 3
-            elif min_dis < hisDist / 2:
+            elif min_dis < hisDist / 4:
                 conserv = 4
             else:
                 conserv = 5
