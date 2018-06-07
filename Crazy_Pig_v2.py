@@ -39,6 +39,7 @@ def load(stat, storage):
     size, field, band, me = stat['size'], stat['now']['fields'], stat['now']['bands'], stat['now']['me']
     storage['myOrder'] = me['id'] # 1, 2 
     #myField: 0: nothing, 1: my field, 2: my band, 3: his field, 4: his band
+    # 41: my_field and his_band,  23: his_field and my band
 
     def update(stat, storage):
         myOrder = storage['myOrder']
@@ -57,9 +58,9 @@ def load(stat, storage):
                 if field[i][j] is None:
                     continue
                 elif field[i][j] == myOrder:
-                    myField[i, j] = 1
+                    myField[i, j] = myField[i, j] * 10 + 1
                 else:
-                    myField[i, j] = 3
+                    myField[i, j] = myField[i, j] * 10 + 3
         storage['myField'] = myField
         
         # update position
@@ -69,8 +70,8 @@ def load(stat, storage):
         storage['enemy_pos'] = enemy_pos 
         
         # update cur score
-        storage['enemy_score'] = np.c_[np.where(myField == 3)].shape[0] + 1
-        storage['my_score'] = np.c_[np.where(myField == 1)].shape[0] + 1
+        storage['enemy_score'] = np.c_[np.where(myField % 10 == 3)].shape[0] + 1
+        storage['my_score'] = np.c_[np.where(myField % 10 == 1)].shape[0] + 1
 
         # others
         storage['enemy'] = stat['now']['enemy']
@@ -111,7 +112,7 @@ def load(stat, storage):
         else:
             prefered_dir = 1
 
-        if dist_now < 20 or (storage['my_score'] / storage['enemy_score'] > 1.2):
+        if dist_now < 20 or storage['my_score'] / storage['enemy_score'] > 1 or myField[my_pos[0], my_pos[1]] % 10 == 3:
             prefered_dir = (prefered_dir + 1) % 2
 
         nextx = me['x'] + directions[me['direction'], 0]
@@ -175,7 +176,7 @@ def load(stat, storage):
         # 判断杀人
         myField = storage['myField']
         my_pos = storage['my_pos']
-        enemy_bands = np.c_[np.where(myField == 4)]
+        enemy_bands = np.c_[np.where(myField == 41)]
         min_dis = 10000
         near_eb = None
         if enemy_bands.shape[0] > 0:
@@ -225,7 +226,7 @@ def load(stat, storage):
             hisPos = storage['enemy_pos']
             hisDist = np.sum(np.abs(my_pos - hisPos))
     
-            enemy_field = np.c_[np.where(myField == 3)]
+            enemy_field = np.c_[np.where(myField % 10 == 3)]
             min_dis = 10000
             for ep in enemy_field:
                 thedis = np.sum(np.abs(ep - my_pos))
