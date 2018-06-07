@@ -136,6 +136,52 @@ AI_normal_wanderer 1 : 11 Crazy_Pig
 |    |        Knockout        |   Ended Here   |           |
 +----+------------------------+----------------+-----------+
 ```
+## Crazy Pig v2
+
+```bash
+Knockout Result: Crazy_Pig_v2 wins.
+Crazy_Pig 1 : 11 Crazy_Pig_v2
++----+------------------+----------------+-----------+
+|  # |  Endgame Winner  | Endgame Reason |    Rmk    |
++----+------------------+----------------+-----------+
+|  1 | (B) Crazy_Pig_v2 |       KO       | ERR, 2828 |
+|  2 | (A) Crazy_Pig_v2 |       KO       | ERR, 1551 |
+|  3 | (B) Crazy_Pig_v2 |       KO       | ERR, 1794 |
+|  4 | (A) Crazy_Pig_v2 |       KO       | ERR, 1363 |
+|  5 | (B) Crazy_Pig_v2 |       KO       | ERR, 1386 |
+|  6 | (A) Crazy_Pig_v2 |       KO       | ERR, 1435 |
+|  7 | (B) Crazy_Pig_v2 |       KO       | ERR, 1634 |
+|  8 | (A) Crazy_Pig_v2 |       KO       | ERR, 1183 |
+|  9 | (B) Crazy_Pig_v2 |       KO       | ERR, 1126 |
+| 10 |  (B) Crazy_Pig   |       KO       | TAP, 2518 |
+| 11 | (B) Crazy_Pig_v2 |       KO       | ERR, 3850 |
+| 12 | (A) Crazy_Pig_v2 |       KO       | ERR, 2833 |
+|    |     Knockout     |   Ended Here   |           |
++----+------------------+----------------+-----------+
+
+Knockout Result: Crazy_Pig_v2 wins.
+AI_normal_wanderer 3 : 11 Crazy_Pig_v2
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 |    (B) Crazy_Pig_v2    |       KO       | TAP, 1017 |
+|  2 | (B) AI_normal_wanderer |       KO       | TAP, 2024 |
+|  3 | (A) AI_normal_wanderer |       KO       | TAP,  697 |
+|  4 | (B) AI_normal_wanderer |       KO       | TAP, 2078 |
+|  5 |    (B) Crazy_Pig_v2    |       KO       | CIT, 2302 |
+|  6 |    (A) Crazy_Pig_v2    |  (2051, 1293)  | END, 4000 |
+|  7 |    (B) Crazy_Pig_v2    |  (1130, 1914)  | END, 4000 |
+|  8 |    (A) Crazy_Pig_v2    |  (2259, 884)   | END, 4000 |
+|  9 |    (B) Crazy_Pig_v2    |  (1203, 2471)  | END, 4000 |
+| 10 |    (A) Crazy_Pig_v2    |       KO       | TAP, 3508 |
+| 11 |    (B) Crazy_Pig_v2    |  (1016, 2014)  | END, 4000 |
+| 12 |    (A) Crazy_Pig_v2    |  (1957, 1440)  | END, 4000 |
+| 13 |    (B) Crazy_Pig_v2    |  (949, 2275)   | END, 4000 |
+| 14 |    (A) Crazy_Pig_v2    |  (2264, 1636)  | END, 4000 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
+```
+
 
 ## git 使用说明  
 先下载git  
