@@ -40,7 +40,7 @@ def load(stat, storage):
     storage['myOrder'] = me['id'] # 1, 2 
     #myField: 0: nothing, 1: my field, 2: my band, 3: his field, 4: his band
     # 41: my_field and his_band,  23: his_field and my band
-    storage['dist_escape'] = 18
+    storage['dist_escape'] = 15
 
     def update(stat, storage):
         myOrder = storage['myOrder']
@@ -260,3 +260,12 @@ def load(stat, storage):
     storage['mode'] = 'wander'
     storage['turn'] = choice('rl')
     storage['count'] = 2
+
+def summary(match_result, stat, storage):
+    myOrder = storage['myOrder']
+    win = myOrder == (match_result[0]+1)
+    if not win and match_result[1] != 3:
+        storage['dist_escape'] += 1
+    else:
+        if storage['dist_escape > 10']:
+            storage['dist_escape'] -= 1
