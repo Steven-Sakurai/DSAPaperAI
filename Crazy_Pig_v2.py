@@ -40,6 +40,7 @@ def load(stat, storage):
     storage['myOrder'] = me['id'] # 1, 2 
     #myField: 0: nothing, 1: my field, 2: my band, 3: his field, 4: his band
     # 41: my_field and his_band,  23: his_field and my band
+    storage['dist_escape'] = 18
 
     def update(stat, storage):
         myOrder = storage['myOrder']
@@ -112,7 +113,7 @@ def load(stat, storage):
         else:
             prefered_dir = 1
 
-        if dist_now < 20 or storage['my_score'] / storage['enemy_score'] > 1 or myField[my_pos[0], my_pos[1]] % 10 == 3:
+        if dist_now < storage['dist_escape'] or storage['my_score'] / storage['enemy_score'] > 1 or myField[my_pos[0], my_pos[1]] % 10 == 3:
             prefered_dir = (prefered_dir + 1) % 2
 
         nextx = me['x'] + directions[me['direction'], 0]
