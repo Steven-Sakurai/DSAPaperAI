@@ -43,7 +43,7 @@ def load(stat, storage):
     if 'ngame' not in storage:
         storage['ngame'] = 0
         storage['win'] = np.repeat(-1, 20)
-        storage['dist_escape'] = np.repeat(10, 20)
+        storage['dist_escape'] = np.repeat(15, 20)
         storage['dist_escape'][0] = 15
 
     def update(stat, storage):
