@@ -114,6 +114,36 @@ AI_25x25 11 : 0 Crazy_Pig_v2
 
 #### how to fuck 25x25?
 
+## Crazy Pig v3
+
+Created for fucking 25x25, but it cannot beat normal wanderer.
+
+```bash
+Knockout Result: Crazy_Pig_v3 wins.
+AI_25x25 5 : 11 Crazy_Pig_v3
++----+------------------+----------------+-----------+
+|  # |  Endgame Winner  | Endgame Reason |    Rmk    |
++----+------------------+----------------+-----------+
+|  1 |   (A) AI_25x25   |       KO       | TAP, 3214 |
+|  2 | (A) Crazy_Pig_v3 |       KO       | WAL,   96 |
+|  3 |   (A) AI_25x25   |       KO       | CIT, 1680 |
+|  4 | (A) Crazy_Pig_v3 |       KO       | WAL,   54 |
+|  5 | (B) Crazy_Pig_v3 |  (679, 4798)   | END, 4000 |
+|  6 |   (B) AI_25x25   |       KO       | TAP, 2861 |
+|  7 | (B) Crazy_Pig_v3 |       KO       | CIT, 3313 |
+|  8 | (A) Crazy_Pig_v3 |       KO       | TAP, 2885 |
+|  9 |   (A) AI_25x25   |       KO       | WAL, 1922 |
+| 10 |   (B) AI_25x25   |       KO       | WAL, 2335 |
+| 11 | (B) Crazy_Pig_v3 |       KO       | WAL,   69 |
+| 12 | (A) Crazy_Pig_v3 |  (4105, 679)   | END, 4000 |
+| 13 | (B) Crazy_Pig_v3 |  (681, 2834)   | END, 4000 |
+| 14 | (A) Crazy_Pig_v3 |  (4321, 679)   | END, 4000 |
+| 15 | (B) Crazy_Pig_v3 |  (681, 2834)   | END, 4000 |
+| 16 | (A) Crazy_Pig_v3 |       KO       | CIT, 3326 |
+|    |     Knockout     |   Ended Here   |           |
++----+------------------+----------------+-----------+
+```
+
 ## git 使用说明  
 先下载git  
 设置邮箱：git config --global user.email "xxx@pku.edu.cn"  
