@@ -116,7 +116,7 @@ def load(stat, storage):
         else:
             prefered_dir = 1
 
-        if dist_now < storage['dist_escape'][storage['ngame']] or storage['my_score'] / storage['enemy_score'] > 1 or myField[my_pos[0], my_pos[1]] % 10 == 3:
+        if dist_now < storage['dist_escape'][storage['ngame']] or storage['my_score'] > storage['enemy_score'] or myField[my_pos[0], my_pos[1]] % 10 == 3:
             prefered_dir = (prefered_dir + 1) % 2
 
         nextx = me['x'] + directions[me['direction'], 0]
