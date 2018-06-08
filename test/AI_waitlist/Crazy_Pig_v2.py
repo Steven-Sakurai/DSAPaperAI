@@ -95,23 +95,30 @@ def load(stat, storage):
     def wander(field, me, storage):
         # 防止出界
         # x轴不出界
+        myField = storage['myField']
+        enemy_fields = np.r_[np.c_[np.where(myField == 3)], np.c_[np.where(myField == 23)]]
         enemy_pos = storage['enemy_pos']
         my_pos = storage['my_pos']
+        if enemy_fields.shape[0] == 0:
+            enemy_fields = enemy_pos
         dir_now = directions[me['direction']]
         dist_now = np.sum(np.abs(my_pos - enemy_pos))
         dist_next = np.zeros([2, 1])
+        dist_fields_next = np.zeros([2, 1])
         for d in ['l', 'r']:
             if d == 'l':
                 dir_next = np.matmul(left, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[0] = np.sum(np.abs(my_pos_tmp - enemy_pos))
+                dist_fields_next[0] = np.mean(np.abs(enemy_fields - my_pos_tmp))
             elif d == 'r':
                 dir_next = np.matmul(right, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[1] = np.sum(np.abs(my_pos_tmp - enemy_pos)) 
-        
+                dist_fields_next[1] = np.mean(np.abs(enemy_fields - my_pos_tmp))
         prefered_dir = None
         dirs = ['l', 'r']
+        
         if dist_next[0] < dist_next[1]:
             prefered_dir = 0
         else:
@@ -121,13 +128,38 @@ def load(stat, storage):
         elif dist_now < storage['dist_escape'][storage['ngame']] or myField[my_pos[0], my_pos[1]] % 10 == 3:
             prefered_dir = (prefered_dir + 1) % 2
 
+        if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
+            if dist_next[0] < dist_next[1]:
+                prefered_dir = 0
+            else:
+                prefered_dir = 1 
+
+        blank_pos = np.c_[np.where(myField == 0)]
+        dist_blank_next = np.zeros([2, 1])
+        for d in ['l', 'r']:
+            if d == 'l':
+                dir_next = np.matmul(left, dir_now)
+                my_pos_tmp = my_pos + dir_next
+                dist_blank_next[0] = np.sum(np.abs(my_pos_tmp - blank_pos))
+            elif d == 'r':
+                dir_next = np.matmul(right, dir_now)
+                my_pos_tmp = my_pos + dir_next
+                dist_blank_next[1] = np.sum(np.abs(my_pos_tmp - blank_pos)) 
+        
+        if storage['my_score'] > storage['enemy_score']:
+            if dist_blank_next[0] - storage['dist_escape'][storage['ngame']]*dist_fields_next[0] > dist_blank_next[1] - storage['dist_escape'][storage['ngame']]*dist_fields_next[1]:
+                prefered_dir = 0
+            else:
+                prefered_dir = 1
+
+
         nextx = me['x'] + directions[me['direction'], 0]
         if nextx <= 1 and me['direction'] != 0 or nextx >= len(
                 field) - 2 and me['direction'] != 2:
             storage['mode'] = 'goback'
             storage['count'] = 0
             if me['direction'] % 2 == 0:  # 掉头
-                next_turn = choice('rl')
+                next_turn = dirs[prefered_dir]
                 storage['turn'] = next_turn
                 return next_turn
             else:

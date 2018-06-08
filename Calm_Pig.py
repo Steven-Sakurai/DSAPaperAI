@@ -43,8 +43,7 @@ def load(stat, storage):
     if 'ngame' not in storage:
         storage['ngame'] = 0
         storage['win'] = np.repeat(-1, 20)
-        storage['dist_escape'] = np.repeat(15, 20)
-        storage['dist_escape'][0] = 15
+        storage['risky'] = np.repeat(0.9, 20)
 
     def update(stat, storage):
         myOrder = storage['myOrder']
@@ -95,7 +94,9 @@ def load(stat, storage):
     def wander(field, me, storage):
         # 防止出界
         # x轴不出界
+        myRisk = storage['risky'][storage['ngame']]
         myField = storage['myField']
+        
         enemy_fields = np.r_[np.c_[np.where(myField == 3)], np.c_[np.where(myField == 23)]]
         enemy_pos = storage['enemy_pos']
         my_pos = storage['my_pos']
@@ -116,42 +117,34 @@ def load(stat, storage):
                 my_pos_tmp = my_pos + dir_next
                 dist_next[1] = np.sum(np.abs(my_pos_tmp - enemy_pos)) 
                 dist_fields_next[1] = np.mean(np.abs(enemy_fields - my_pos_tmp))
+        
         prefered_dir = None
         dirs = ['l', 'r']
-        
-        if dist_next[0] < dist_next[1]:
-            prefered_dir = 0
-        else:
-            prefered_dir = 1
-        if storage['my_score'] > storage['enemy_score']:
-            prefered_dir = (prefered_dir + 1) % 2
-        elif dist_now < storage['dist_escape'][storage['ngame']] or myField[my_pos[0], my_pos[1]] % 10 == 3:
-            prefered_dir = (prefered_dir + 1) % 2
 
+        # 如果跑来我的领地，就靠近
         if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
             if dist_next[0] < dist_next[1]:
                 prefered_dir = 0
             else:
                 prefered_dir = 1 
-
-        blank_pos = np.c_[np.where(myField == 0)]
-        dist_blank_next = np.zeros([2, 1])
-        for d in ['l', 'r']:
-            if d == 'l':
-                dir_next = np.matmul(left, dir_now)
-                my_pos_tmp = my_pos + dir_next
-                dist_blank_next[0] = np.sum(np.abs(my_pos_tmp - blank_pos))
-            elif d == 'r':
-                dir_next = np.matmul(right, dir_now)
-                my_pos_tmp = my_pos + dir_next
-                dist_blank_next[1] = np.sum(np.abs(my_pos_tmp - blank_pos)) 
-        
-        if storage['my_score'] > storage['enemy_score']:
-            if dist_blank_next[0] - storage['dist_escape'][storage['ngame']]*dist_fields_next[0] > dist_blank_next[1] - storage['dist_escape'][storage['ngame']]*dist_fields_next[1]:
+        # 如果快输了，追着打       
+        elif storage['my_score'] < 100 + storage['enemy_score']:
+            if dist_next[0] < dist_next[1]:
+                prefered_dir = 0
+            else:
+                prefered_dir = 1 
+        # 太近
+        elif dist_now < 40*myRisk:
+            if dist_next[0] < dist_next[1]:
+                prefered_dir = 1
+            else:
+                prefered_dir = 0 
+        # 尽量靠近敌人的领地且远离敌人 
+        else:
+            if dist_fields_next[0] - (1-myRisk)*dist_next[0] < dist_fields_next[1] - (1-myRisk)*dist_next[1]:
                 prefered_dir = 0
             else:
                 prefered_dir = 1
-
 
         nextx = me['x'] + directions[me['direction'], 0]
         if nextx <= 1 and me['direction'] != 0 or nextx >= len(
@@ -230,7 +223,10 @@ def load(stat, storage):
         min_dis = 10000
         near_mb = None
         enemy_pos = storage['enemy_pos']
-        my_bands = np.c_[np.where(myField == 2)]
+        my_bands = np.r_[np.c_[np.where(myField == 2)], np.c_[np.where(myField == 23)]]
+        #my_bands = np.c_[np.where(myField == 23)]
+        #my_bands = np.r_[my_bands, my_pos]
+        #my_bands = my_pos
         if my_bands.shape[0] > 0:
             for mb in my_bands:
                 thedis = np.sum(np.abs(mb - enemy_pos))
@@ -272,6 +268,8 @@ def load(stat, storage):
                     min_dis = thedis
             if hisDist < 10:
                 conserv = 6
+            elif hisDist > 30:
+                conserv = 3
             elif min_dis < hisDist / 4:
                 conserv = 4
             else:
@@ -304,15 +302,19 @@ def summary(match_result, stat, storage):
     '''
     myOrder = storage['myOrder']
     storage['ngame'] += 1
-    last_dist = storage['dist_escape'][storage['ngame'] - 1]
+    last_risky = storage['risky'][storage['ngame'] - 1]
 
     win = myOrder == (match_result[0]+1)
     storage['win'][storage['ngame'] - 1] = win 
 
     if win:
-        storage['dist_escape'][storage['ngame']:] = last_dist
+        storage['risky'][storage['ngame']:] = last_risky
     elif not win and match_result[1] != 3:
         storage['win'][storage['ngame'] - 1] = -99
-        storage['dist_escape'][storage['ngame']] = last_dist + np.array(np.where(storage['win'] == -99)).shape[1]
-    elif not win and last_dist > 10:
-        storage['dist_escape'][storage['ngame']] = last_dist - 2
+        storage['risky'][storage['ngame']] = last_risky - 0.2
+    elif not win:
+        storage['risky'][storage['ngame']] = last_risky + 0.2
+    if storage['risky'][storage['ngame']] > 1.0:
+        storage['risky'][storage['ngame']] = 1.0
+    if storage['risky'][storage['ngame']] < 0.0:
+        storage['risky'][storage['ngame']] = 0.0
