@@ -118,30 +118,60 @@ AI_25x25 11 : 0 Crazy_Pig_v2
 
 Created for fucking 25x25, but it cannot beat normal wanderer.
 
+- status: discarded
+
+## Crazy Pig v2.1
+
+- minor bugs fixed
+- able to defeat 25x25 and normal wanderer
+
+#### 目前效果
+
 ```bash
-Knockout Result: Crazy_Pig_v3 wins.
-AI_25x25 5 : 11 Crazy_Pig_v3
-+----+------------------+----------------+-----------+
-|  # |  Endgame Winner  | Endgame Reason |    Rmk    |
-+----+------------------+----------------+-----------+
-|  1 |   (A) AI_25x25   |       KO       | TAP, 3214 |
-|  2 | (A) Crazy_Pig_v3 |       KO       | WAL,   96 |
-|  3 |   (A) AI_25x25   |       KO       | CIT, 1680 |
-|  4 | (A) Crazy_Pig_v3 |       KO       | WAL,   54 |
-|  5 | (B) Crazy_Pig_v3 |  (679, 4798)   | END, 4000 |
-|  6 |   (B) AI_25x25   |       KO       | TAP, 2861 |
-|  7 | (B) Crazy_Pig_v3 |       KO       | CIT, 3313 |
-|  8 | (A) Crazy_Pig_v3 |       KO       | TAP, 2885 |
-|  9 |   (A) AI_25x25   |       KO       | WAL, 1922 |
-| 10 |   (B) AI_25x25   |       KO       | WAL, 2335 |
-| 11 | (B) Crazy_Pig_v3 |       KO       | WAL,   69 |
-| 12 | (A) Crazy_Pig_v3 |  (4105, 679)   | END, 4000 |
-| 13 | (B) Crazy_Pig_v3 |  (681, 2834)   | END, 4000 |
-| 14 | (A) Crazy_Pig_v3 |  (4321, 679)   | END, 4000 |
-| 15 | (B) Crazy_Pig_v3 |  (681, 2834)   | END, 4000 |
-| 16 | (A) Crazy_Pig_v3 |       KO       | CIT, 3326 |
-|    |     Knockout     |   Ended Here   |           |
-+----+------------------+----------------+-----------+
+Knockout Result: Crazy_Pig_v2_1 wins.
+AI_25x25 4 : 11 Crazy_Pig_v2_1
++----+--------------------+----------------+-----------+
+|  # |   Endgame Winner   | Endgame Reason |    Rmk    |
++----+--------------------+----------------+-----------+
+|  1 | (B) Crazy_Pig_v2_1 |  (681, 3362)   | END, 4000 |
+|  2 |    (B) AI_25x25    |       KO       | TAP, 2071 |
+|  3 | (B) Crazy_Pig_v2_1 |       KO       | WAL,   95 |
+|  4 | (A) Crazy_Pig_v2_1 |  (5658, 679)   | END, 4000 |
+|  5 | (B) Crazy_Pig_v2_1 |  (679, 3664)   | END, 4000 |
+|  6 |    (B) AI_25x25    |       KO       | TAP,  657 |
+|  7 | (B) Crazy_Pig_v2_1 |       KO       | TAP, 2834 |
+|  8 | (A) Crazy_Pig_v2_1 |  (3672, 679)   | END, 4000 |
+|  9 |    (A) AI_25x25    |       KO       | CIT, 3598 |
+| 10 | (A) Crazy_Pig_v2_1 |  (3873, 679)   | END, 4000 |
+| 11 | (B) Crazy_Pig_v2_1 |  (679, 4530)   | END, 4000 |
+| 12 | (A) Crazy_Pig_v2_1 |  (3644, 679)   | END, 4000 |
+| 13 | (B) Crazy_Pig_v2_1 |       KO       | WAL,   67 |
+| 14 |    (B) AI_25x25    |       KO       | ERR,  298 |
+| 15 | (B) Crazy_Pig_v2_1 |  (679, 4045)   | END, 4000 |
+|    |      Knockout      |   Ended Here   |           |
++----+--------------------+----------------+-----------+
+
+Knockout Result: Crazy_Pig_v2_1 wins.
+AI_normal_wanderer 3 : 11 Crazy_Pig_v2_1
++----+------------------------+----------------+-----------+
+|  # |     Endgame Winner     | Endgame Reason |    Rmk    |
++----+------------------------+----------------+-----------+
+|  1 |   (B) Crazy_Pig_v2_1   |       KO       | CIT, 2122 |
+|  2 |   (A) Crazy_Pig_v2_1   |  (3626, 2875)  | END, 4000 |
+|  3 |   (B) Crazy_Pig_v2_1   |  (1820, 3663)  | END, 4000 |
+|  4 |   (A) Crazy_Pig_v2_1   |  (3467, 2941)  | END, 4000 |
+|  5 | (A) AI_normal_wanderer |  (2465, 2084)  | END, 4000 |
+|  6 | (B) AI_normal_wanderer |       KO       | TAP, 3209 |
+|  7 |   (B) Crazy_Pig_v2_1   |  (3653, 3829)  | END, 4000 |
+|  8 |   (A) Crazy_Pig_v2_1   |  (3853, 2011)  | END, 4000 |
+|  9 |   (B) Crazy_Pig_v2_1   |       KO       | TAP, 2720 |
+| 10 |   (A) Crazy_Pig_v2_1   |  (3266, 2322)  | END, 4000 |
+| 11 | (A) AI_normal_wanderer |  (3821, 3515)  | END, 4000 |
+| 12 |   (A) Crazy_Pig_v2_1   |       KO       | TAP, 1518 |
+| 13 |   (B) Crazy_Pig_v2_1   |  (3352, 4226)  | END, 4000 |
+| 14 |   (A) Crazy_Pig_v2_1   |       KO       | TAP, 3574 |
+|    |        Knockout        |   Ended Here   |           |
++----+------------------------+----------------+-----------+
 ```
 
 ## git 使用说明  

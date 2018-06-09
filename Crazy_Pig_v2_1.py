@@ -34,22 +34,30 @@ def load(stat, storage):
     from random import choice, randrange
     directions = np.array([[1, 0], [0, 1], [-1, 0], [0, -1]])
     dirs = ['l', 'r']
-
     left = np.array([[0, 1], [-1, 0]])
     right = np.array([[0, -1], [1, 0]])
     
     size, field, band, me = stat['size'], stat['now']['fields'], stat['now']['bands'], stat['now']['me']
     storage['myOrder'] = me['id'] # 1, 2 
-    storage['conserv'] = 5
+    storage['n'] = 0
     #myField: 0: nothing, 1: my field, 2: my band, 3: his field, 4: his band
     # 41: my_field and his_band,  23: his_field and my band
     if 'ngame' not in storage:
         storage['ngame'] = 0
         storage['win'] = np.repeat(-1, 20)
-        storage['dist_escape'] = np.repeat(12, 20)
+        storage['dist_escape'] = np.repeat(15, 20)
+        storage['risky'] = 0.1
 
     def update(stat, storage):
         myOrder = storage['myOrder']
+        # 开场速攻
+        storage['n'] += 1
+        if storage['n'] <= 3:
+            storage['conserv'] = 3
+        elif storage['n'] <= 8:
+            storage['conserv'] = 4
+        else:
+            storage['conserv'] = 5
         # update myField
         size, field, band = stat['size'], stat['now']['fields'], stat['now']['bands']
         myField = np.zeros([size[0], size[1]])
@@ -73,74 +81,107 @@ def load(stat, storage):
         # update position
         enemy_pos = np.array([stat['now']['enemy']['x'], stat['now']['enemy']['y']])
         my_pos = np.array([stat['now']['me']['x'], stat['now']['me']['y']])
+        enemy_fields = np.r_[np.c_[np.where(myField == 3)], np.c_[np.where(myField == 23)]]
+        enemy_bands = np.r_[np.c_[np.where(myField == 4)], np.c_[np.where(myField == 41)]]
         storage['my_pos'] = my_pos
-        storage['enemy_pos'] = enemy_pos 
-        
-        # update cur score
-        storage['enemy_score'] = np.r_[np.c_[np.where(myField == 3)], np.c_[np.where(myField == 23)]].shape[0] + 1
-        storage['my_score'] = np.r_[np.c_[np.where(myField == 1)], np.c_[np.where(myField == 41)]].shape[0] + 1
+        storage['enemy_pos'] = enemy_pos
+        storage['enemy_fields'] = enemy_fields 
+        storage['enemy_bands'] = enemy_bands 
 
-        if storage['my_score'] > 50 + storage['enemy_score']:
-            storage['conserv'] = 10
+        # update cur score
+        storage['enemy_score'] = np.c_[np.where(myField % 10 == 3)].shape[0] + 1
+        storage['my_score'] = np.c_[np.where(myField % 10 == 1)].shape[0] + 1
+
         # others
         storage['enemy'] = stat['now']['enemy']
 
-        enemy_bands = np.r_[np.c_[np.where(myField == 4)], np.c_[np.where(myField == 41)]]
-        storage['enemy_bands'] = enemy_bands
-        enemy_fields = np.r_[np.c_[np.where(myField == 3)], np.c_[np.where(myField == 23)]]
-        
-        if enemy_fields.shape[0] == 0:
-            enemy_fields = enemy_pos
+        # update prefered direction
         dir_now = directions[me['direction']]
         dist_now = np.sum(np.abs(my_pos - enemy_pos))
+        
         dist_next = np.zeros([2, 1])
         dist_fields_next = np.zeros([2, 1])
-        for d in ['l', 'r']:
+        blank_pos = np.c_[np.where(myField == 0)]
+        dist_blank_next = np.zeros([2, 1])
+        for d in dirs:
             if d == 'l':
                 dir_next = np.matmul(left, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[0] = np.sum(np.abs(my_pos_tmp - enemy_pos))
                 dist_fields_next[0] = np.mean(np.abs(enemy_fields - my_pos_tmp))
+                dist_blank_next[0] = np.mean(np.abs(my_pos_tmp - blank_pos))
             elif d == 'r':
                 dir_next = np.matmul(right, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[1] = np.sum(np.abs(my_pos_tmp - enemy_pos)) 
                 dist_fields_next[1] = np.mean(np.abs(enemy_fields - my_pos_tmp))
+                dist_blank_next[1] = np.mean(np.abs(my_pos_tmp - blank_pos)) 
+
         prefered_dir = None
-        
         if dist_next[0] < dist_next[1]:
             prefered_dir = 0
         else:
             prefered_dir = 1
-        
-        if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
-            if dist_next[0] < dist_next[1]:
-                prefered_dir = 0
-            else:
-                prefered_dir = 1 
-        if storage['my_score'] < storage['enemy_score']:
+
+        # 开场追打
+        if storage['n'] <= 4:
             if dist_next[0] <= dist_next[1]:
                 prefered_dir = 0
             else:
                 prefered_dir = 1
-        elif storage['enemy_bands'].shape[0] >= 3:
-            if dist_next[0] < dist_next[1]:
-                prefered_dir = 0
-            else:
-                prefered_dir = 1 
-        elif storage['my_score'] > 100 + 1.1 * storage['enemy_score']:
-            if dist_next[0] <= dist_next[1]:
-                prefered_dir = 1
-            else:
-                prefered_dir = 0
-        
-        elif dist_now < storage['dist_escape'][storage['ngame']]:
-            if dist_next[0] <= dist_next[1]:
-                prefered_dir = 1
-            else:
-                prefered_dir = 0
-        if prefered_dir is None:
-            prefered_dir = choice('lr')
+        else:
+            # 敌人出窝，追着打
+            if storage['enemy_bands'].shape[0] > 1:
+                if dist_next[0] < dist_next[1]:
+                    prefered_dir = 0
+                else:
+                    prefered_dir = 1
+
+            # # 如果赢着，就避开敌人
+            # if storage['my_score'] > storage['enemy_score'] and storage['my_score'] > (1+storage['risky'])*2000:
+            #     if dist_next[0] < dist_next[1]:
+            #         prefered_dir = 1
+            #     else:
+            #         prefered_dir = 0
+            # elif dist_now < storage['dist_escape'][storage['ngame']]:
+            #     if dist_next[0] < dist_next[1]:
+            #         prefered_dir = 1
+            #     else:
+            #         prefered_dir = 0
+            # if storage['my_score'] <= (1+storage['risky'])*storage['enemy_score']:
+            #     if dist_next[0] < dist_next[1]:
+            #         prefered_dir = 0
+            #     else:
+            #         prefered_dir = 1        
+
+            # # 如果敌人在我地盘里，就追他
+            # if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
+            #     if dist_next[0] < dist_next[1]:
+            #         prefered_dir = 0
+            #     else:
+            #         prefered_dir = 1 
+
+            # # 如果以上均不是
+            # if prefered_dir is None:
+            #     if dist_next[0] < dist_next[1]:
+            #         prefered_dir = 0
+            #     else:
+            #         prefered_dir = 1
+
+            if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
+                if dist_next[0] < dist_next[1]:
+                    prefered_dir = 1
+                else:
+                    prefered_dir = 0
+
+            if storage['my_score'] > 100 + storage['enemy_score'] and dist_now < storage['dist_escape'][storage['ngame']]:
+                if dist_blank_next[0] - storage['dist_escape'][storage['ngame']]*dist_fields_next[0] > dist_blank_next[1] - storage['dist_escape'][storage['ngame']]*dist_fields_next[1]:
+                    prefered_dir = 0
+                else:
+                    prefered_dir = 1
+
+
+        # update prefered_dir over
         storage['prefered_dir'] = prefered_dir
         return
 
@@ -157,12 +198,9 @@ def load(stat, storage):
     def wander(field, me, storage):
         # 防止出界
         # x轴不出界
-        myField = storage['myField']
-        enemy_bands = storage['enemy_bands']
-
         nextx = me['x'] + directions[me['direction'], 0]
         if nextx <= 1 and me['direction'] != 0 or nextx >= len(
-                field) - 3 and me['direction'] != 2:
+                field) - 2 and me['direction'] != 2:
             storage['mode'] = 'goback'
             storage['count'] = 0
             if me['direction'] % 2 == 0:  # 掉头
@@ -175,7 +213,7 @@ def load(stat, storage):
         # y轴不出界
         nexty = me['y'] + directions[me['direction'], 1]
         if nexty <= 1 and me['direction'] != 1 or nexty >= len(
-                field[0]) - 3 and me['direction'] != 3:
+                field[0]) - 2 and me['direction'] != 3:
             storage['mode'] = 'goback'
             storage['count'] = 0
             if me['direction'] % 2:  # 掉头
@@ -190,7 +228,7 @@ def load(stat, storage):
             storage['mode'] = 'square'
             storage['count'] = randrange(1, 3)
             storage['turn'] = dirs[storage['prefered_dir']]
-            storage['maxl'] = dist(me, storage['enemy'], storage['conserv'])
+            storage['maxl'] = dist(me, storage['enemy'])
             return ''
 
         # 随机前进，转向频率递减
@@ -218,11 +256,10 @@ def load(stat, storage):
             storage['mode'] = 'wander'
             storage['count'] = 2
             return
-
         # 判断杀人
         myField = storage['myField']
         my_pos = storage['my_pos']
-        enemy_bands = np.c_[np.where(myField == 41)]
+        enemy_bands = storage['enemy_bands']
         min_dis = 10000
         near_eb = None
         if enemy_bands.shape[0] > 0:
@@ -231,24 +268,23 @@ def load(stat, storage):
                 if thedis < min_dis:
                     min_dis = thedis
                     near_eb = eb
-        if near_eb is not None and np.sum(near_eb) <= 2 and np.prod(near_eb) == 0:
-            if np.matmul( (near_eb - my_pos), directions[me['direction']] ) > 0:
+        if near_eb is not None and np.sum(np.abs(near_eb - my_pos)) <= 2 and np.prod(near_eb - my_pos) == 0:
+            if np.matmul( (near_eb - my_pos), directionss[me['direction']] ) > 0:
                 storage['maxl'] += 1
         # 判断跑路
         min_dis = 10000
         near_mb = None
         enemy_pos = storage['enemy_pos']
-        my_bands = np.c_[np.where(myField == 2)]
+        my_bands = np.r_[np.c_[np.where(myField == 2)], np.c_[np.where(myField == 23)]]
         if my_bands.shape[0] > 0:
             for mb in my_bands:
                 thedis = np.sum(np.abs(mb - enemy_pos))
                 if thedis < min_dis:
                     min_dis = thedis
                     near_mb = mb
-        if near_mb is not None and np.sum(near_mb) <= 2 and np.prod(near_mb) == 0:
+        if near_mb is not None and np.sum(np.abs(near_mb - enemy_pos)) <= 2 and np.prod(near_mb - enemy_pos) == 0:
             if np.matmul( (near_mb - enemy_pos), directions[enemy['direction']] ) > 0:
                 storage['maxl'] -= 1
-
 
         # 画方块
         storage['count'] += 1
@@ -283,10 +319,9 @@ def load(stat, storage):
                 storage['conserv'] = 6
             elif min_dis < hisDist / 4:
                 storage['conserv'] = 4
-            else:
-                storage['conserv'] = 5
+
             storage['maxl'] = dist(me, storage['enemy'], storage['conserv'])
-            storage['turn'] = storage['myField']
+            storage['turn'] = dirs[storage['prefered_dir']]
             return ''
 
         # 前进指定步数
@@ -294,7 +329,7 @@ def load(stat, storage):
         if storage['count'] > 2:
             storage['mode'] = 'wander'
             storage['count'] = 2
-            return choice('rl12345')
+            return choice('rl1234')
 
     # 写入模块
     storage['wander'] = wander
@@ -322,6 +357,6 @@ def summary(match_result, stat, storage):
         storage['dist_escape'][storage['ngame']:] = last_dist
     elif not win and match_result[1] != 3:
         storage['win'][storage['ngame'] - 1] = -99
-        storage['dist_escape'][storage['ngame']] = last_dist + np.array(np.where(storage['win'] == -99)).shape[1]
+        storage['dist_escape'][storage['ngame']] = last_dist + 3
     elif not win and last_dist > 10:
         storage['dist_escape'][storage['ngame']] = last_dist - 2
