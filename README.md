@@ -129,25 +129,23 @@ Created for fucking 25x25, but it cannot beat normal wanderer.
 
 ```bash
 Knockout Result: Crazy_Pig_v2_1 wins.
-AI_25x25 4 : 11 Crazy_Pig_v2_1
+AI_25x25 2 : 11 Crazy_Pig_v2_1
 +----+--------------------+----------------+-----------+
 |  # |   Endgame Winner   | Endgame Reason |    Rmk    |
 +----+--------------------+----------------+-----------+
-|  1 | (B) Crazy_Pig_v2_1 |  (681, 3362)   | END, 4000 |
-|  2 |    (B) AI_25x25    |       KO       | TAP, 2071 |
-|  3 | (B) Crazy_Pig_v2_1 |       KO       | WAL,   95 |
-|  4 | (A) Crazy_Pig_v2_1 |  (5658, 679)   | END, 4000 |
-|  5 | (B) Crazy_Pig_v2_1 |  (679, 3664)   | END, 4000 |
-|  6 |    (B) AI_25x25    |       KO       | TAP,  657 |
-|  7 | (B) Crazy_Pig_v2_1 |       KO       | TAP, 2834 |
-|  8 | (A) Crazy_Pig_v2_1 |  (3672, 679)   | END, 4000 |
-|  9 |    (A) AI_25x25    |       KO       | CIT, 3598 |
-| 10 | (A) Crazy_Pig_v2_1 |  (3873, 679)   | END, 4000 |
-| 11 | (B) Crazy_Pig_v2_1 |  (679, 4530)   | END, 4000 |
-| 12 | (A) Crazy_Pig_v2_1 |  (3644, 679)   | END, 4000 |
-| 13 | (B) Crazy_Pig_v2_1 |       KO       | WAL,   67 |
-| 14 |    (B) AI_25x25    |       KO       | ERR,  298 |
-| 15 | (B) Crazy_Pig_v2_1 |  (679, 4045)   | END, 4000 |
+|  1 | (B) Crazy_Pig_v2_1 |  (681, 3691)   | END, 4000 |
+|  2 | (A) Crazy_Pig_v2_1 |       KO       | CIT,  514 |
+|  3 | (B) Crazy_Pig_v2_1 |       KO       | TAP, 3340 |
+|  4 | (A) Crazy_Pig_v2_1 |  (3107, 679)   | END, 4000 |
+|  5 | (B) Crazy_Pig_v2_1 |  (679, 4003)   | END, 4000 |
+|  6 | (A) Crazy_Pig_v2_1 |       KO       | WAL,   84 |
+|  7 | (B) Crazy_Pig_v2_1 |  (676, 3601)   | END, 4000 |
+|  8 |    (B) AI_25x25    |       KO       | TAP, 3485 |
+|  9 |    (A) AI_25x25    |       KO       | TAP, 3308 |
+| 10 | (A) Crazy_Pig_v2_1 |       KO       | TAP, 2769 |
+| 11 | (B) Crazy_Pig_v2_1 |  (679, 3841)   | END, 4000 |
+| 12 | (A) Crazy_Pig_v2_1 |       KO       | WAL,   98 |
+| 13 | (B) Crazy_Pig_v2_1 |  (619, 4444)   | END, 4000 |
 |    |      Knockout      |   Ended Here   |           |
 +----+--------------------+----------------+-----------+
 

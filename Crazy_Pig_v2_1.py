@@ -269,7 +269,7 @@ def load(stat, storage):
                     min_dis = thedis
                     near_eb = eb
         if near_eb is not None and np.sum(np.abs(near_eb - my_pos)) <= 2 and np.prod(near_eb - my_pos) == 0:
-            if np.matmul( (near_eb - my_pos), directionss[me['direction']] ) > 0:
+            if np.matmul( (near_eb - my_pos), directions[me['direction']] ) > 0:
                 storage['maxl'] += 1
         # 判断跑路
         min_dis = 10000
