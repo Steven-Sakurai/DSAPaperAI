@@ -177,7 +177,7 @@ def load(stat, storage):
                     storage['turn'] = next_turn
                     return next_turn
                 else:
-                    next_turn = dirs[prefered_dir]
+                    next_turn = dirs[storage['prefered_dir']]
                     storage['turn'] = next_turn
                     return next_turn
             else:
@@ -208,7 +208,7 @@ def load(stat, storage):
                     storage['turn'] = next_turn
                     return next_turn
                 else:
-                    next_turn = dirs[prefered_dir]
+                    next_turn = dirs[storage['prefered_dir']]
                     storage['turn'] = next_turn
                     return next_turn
             else:

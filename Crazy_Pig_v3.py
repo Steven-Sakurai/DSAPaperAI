@@ -40,11 +40,10 @@ def load(stat, storage):
     storage['myOrder'] = me['id'] # 1, 2 
     #myField: 0: nothing, 1: my field, 2: my band, 3: his field, 4: his band
     # 41: my_field and his_band,  23: his_field and my band
-    if 'ngame' not in storage:
-        storage['ngame'] = 0
-        storage['win'] = np.repeat(-1, 20)
-        storage['dist_escape'] = np.repeat(15, 20)
-        storage['dist_escape'][0] = 15
+    storage['ngame'] = 0
+    storage['win'] = np.repeat(-1, 20)
+    storage['dist_escape'] = np.zeros([20, 1])
+    storage['dist_escape'][0] = 15
 
     def update(stat, storage):
         myOrder = storage['myOrder']
@@ -95,122 +94,53 @@ def load(stat, storage):
     def wander(field, me, storage):
         # 防止出界
         # x轴不出界
-        myField = storage['myField']
-        enemy_fields = np.r_[np.c_[np.where(myField == 3)], np.c_[np.where(myField == 23)]]
         enemy_pos = storage['enemy_pos']
         my_pos = storage['my_pos']
-        if enemy_fields.shape[0] == 0:
-            enemy_fields = enemy_pos
         dir_now = directions[me['direction']]
         dist_now = np.sum(np.abs(my_pos - enemy_pos))
         dist_next = np.zeros([2, 1])
-        dist_fields_next = np.zeros([2, 1])
         for d in ['l', 'r']:
             if d == 'l':
                 dir_next = np.matmul(left, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[0] = np.sum(np.abs(my_pos_tmp - enemy_pos))
-                dist_fields_next[0] = np.mean(np.abs(enemy_fields - my_pos_tmp))
             elif d == 'r':
                 dir_next = np.matmul(right, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[1] = np.sum(np.abs(my_pos_tmp - enemy_pos)) 
-                dist_fields_next[1] = np.mean(np.abs(enemy_fields - my_pos_tmp))
+        
         prefered_dir = None
         dirs = ['l', 'r']
-        
         if dist_next[0] < dist_next[1]:
             prefered_dir = 0
         else:
             prefered_dir = 1
-        if storage['my_score'] > storage['enemy_score']:
+
+        if dist_now < storage['dist_escape'][storage['ngame']] or storage['my_score'] / storage['enemy_score'] > 1 or myField[my_pos[0], my_pos[1]] % 10 == 3:
             prefered_dir = (prefered_dir + 1) % 2
-        elif dist_now < storage['dist_escape'][storage['ngame']] or myField[my_pos[0], my_pos[1]] % 10 == 3:
-            prefered_dir = (prefered_dir + 1) % 2
-
-        if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
-            if dist_next[0] < dist_next[1]:
-                prefered_dir = 0
-            else:
-                prefered_dir = 1 
-
-        blank_pos = np.c_[np.where(myField == 0)]
-        dist_blank_next = np.zeros([2, 1])
-        for d in ['l', 'r']:
-            if d == 'l':
-                dir_next = np.matmul(left, dir_now)
-                my_pos_tmp = my_pos + dir_next
-                dist_blank_next[0] = np.sum(np.abs(my_pos_tmp - blank_pos))
-            elif d == 'r':
-                dir_next = np.matmul(right, dir_now)
-                my_pos_tmp = my_pos + dir_next
-                dist_blank_next[1] = np.sum(np.abs(my_pos_tmp - blank_pos)) 
-        
-        if storage['my_score'] > storage['enemy_score']:
-            if dist_blank_next[0] - storage['dist_escape'][storage['ngame']]*dist_fields_next[0] > dist_blank_next[1] - storage['dist_escape'][storage['ngame']]*dist_fields_next[1]:
-                prefered_dir = 0
-            else:
-                prefered_dir = 1
-
 
         nextx = me['x'] + directions[me['direction'], 0]
-        nexty = me['y'] + directions[me['direction'], 1]
         if nextx <= 1 and me['direction'] != 0 or nextx >= len(
                 field) - 2 and me['direction'] != 2:
             storage['mode'] = 'goback'
             storage['count'] = 0
             if me['direction'] % 2 == 0:  # 掉头
-                if (me['direction'] == 0) and (nexty >= len(field[0])-1):
-                    next_turn = 'l'
-                    storage['turn'] = next_turn
-                    return next_turn
-                elif (me['direction'] == 0) and (nexty <= 1):
-                    next_turn = 'r'
-                    storage['turn'] = next_turn
-                    return next_turn
-                if (me['direction'] == 2) and (nexty >= len(field[0])-1):
-                    next_turn = 'r'
-                    storage['turn'] = next_turn
-                    return next_turn
-                elif (me['direction'] == 2) and (nexty <= 1):
-                    next_turn = 'l'
-                    storage['turn'] = next_turn
-                    return next_turn
-                else:
-                    next_turn = dirs[prefered_dir]
-                    storage['turn'] = next_turn
-                    return next_turn
+                next_turn = dirs[prefered_dir]
+                storage['turn'] = next_turn
+                return next_turn
             else:
                 return 'lr' [(nextx <= 1) ^ (me['direction'] == 1)]
 
         # y轴不出界
-        nextx = me['x'] + directions[me['direction'], 0]
         nexty = me['y'] + directions[me['direction'], 1]
         if nexty <= 1 and me['direction'] != 1 or nexty >= len(
                 field[0]) - 2 and me['direction'] != 3:
             storage['mode'] = 'goback'
             storage['count'] = 0
             if me['direction'] % 2:  # 掉头
-                if (me['direction'] == 1) and (nextx >= len(field)-1):
-                    next_turn = 'r'
-                    storage['turn'] = next_turn
-                    return next_turn
-                elif (me['direction'] == 1) and (nextx <= 1):
-                    next_turn = 'l'
-                    storage['turn'] = next_turn
-                    return next_turn
-                elif (me['direction'] == 3) and (nextx >= len(field)-1):
-                    next_turn = 'l'
-                    storage['turn'] = next_turn
-                    return next_turn
-                elif (me['direction'] == 3) and (nextx <= 1):
-                    next_turn = 'r'
-                    storage['turn'] = next_turn
-                    return next_turn
-                else:
-                    next_turn = dirs[prefered_dir]
-                    storage['turn'] = next_turn
-                    return next_turn
+                next_turn = dirs[prefered_dir]
+                storage['turn'] = next_turn
+                return next_turn
             else:
                 return 'lr' [(nexty <= 1) ^ (me['direction'] == 2)]
 
@@ -308,6 +238,8 @@ def load(stat, storage):
                     min_dis = thedis
             if hisDist < 10:
                 conserv = 6
+            elif min_dis < hisDist / 8:
+                conserv = 3
             elif min_dis < hisDist / 4:
                 conserv = 4
             else:
@@ -333,11 +265,6 @@ def load(stat, storage):
     storage['count'] = 2
 
 def summary(match_result, stat, storage):
-    '''
-    if I win, I set the following games' parameter as the current one
-    If I'm killed, I increase my conservation 
-    If I lost by score, I decrease my conservation
-    '''
     myOrder = storage['myOrder']
     storage['ngame'] += 1
     last_dist = storage['dist_escape'][storage['ngame'] - 1]
@@ -345,10 +272,11 @@ def summary(match_result, stat, storage):
     win = myOrder == (match_result[0]+1)
     storage['win'][storage['ngame'] - 1] = win 
 
-    if win:
-        storage['dist_escape'][storage['ngame']:] = last_dist
-    elif not win and match_result[1] != 3:
+    if not win and match_result[1] != 3:
         storage['win'][storage['ngame'] - 1] = -99
-        storage['dist_escape'][storage['ngame']] = last_dist + np.array(np.where(storage['win'] == -99)).shape[1]
-    elif not win and last_dist > 10:
-        storage['dist_escape'][storage['ngame']] = last_dist - 2
+        storage['dist_escape'][storage['ngame']] = last_dist + np.sum(np.where(storage['win'] == -99))
+    else:
+        if win:
+            return
+        elif not win and last_dist > 10:
+            storage['dist_escape'] -= 1
