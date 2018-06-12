@@ -46,15 +46,15 @@ def load(stat, storage):
         storage['ngame'] = 0
         storage['win'] = np.repeat(-1, 20)
         storage['dist_escape'] = np.repeat(15, 20)
-        storage['risky'] = 0.1
+        storage['risky'] = 0.4
 
     def update(stat, storage):
         myOrder = storage['myOrder']
         # 开场速攻
         storage['n'] += 1
-        if storage['n'] <= 3:
-            storage['conserv'] = 3
-        elif storage['n'] <= 8:
+        if storage['n'] <= 4:
+            storage['conserv'] = 2
+        elif storage['n'] <= 20:
             storage['conserv'] = 4
         else:
             storage['conserv'] = 5
@@ -108,24 +108,20 @@ def load(stat, storage):
                 dir_next = np.matmul(left, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[0] = np.sum(np.abs(my_pos_tmp - enemy_pos))
-                dist_fields_next[0] = np.mean(np.abs(enemy_fields - my_pos_tmp))
-                dist_blank_next[0] = np.mean(np.abs(my_pos_tmp - blank_pos))
+                dist_fields_next[0] = np.sum(np.abs(enemy_fields - my_pos_tmp))
+                dist_blank_next[0] = np.sum(np.abs(my_pos_tmp - blank_pos))
             elif d == 'r':
                 dir_next = np.matmul(right, dir_now)
                 my_pos_tmp = my_pos + dir_next
                 dist_next[1] = np.sum(np.abs(my_pos_tmp - enemy_pos)) 
-                dist_fields_next[1] = np.mean(np.abs(enemy_fields - my_pos_tmp))
-                dist_blank_next[1] = np.mean(np.abs(my_pos_tmp - blank_pos)) 
+                dist_fields_next[1] = np.sum(np.abs(enemy_fields - my_pos_tmp))
+                dist_blank_next[1] = np.sum(np.abs(my_pos_tmp - blank_pos)) 
 
         prefered_dir = None
-        if dist_next[0] < dist_next[1]:
-            prefered_dir = 0
-        else:
-            prefered_dir = 1
 
         # 开场追打
-        if storage['n'] <= 4:
-            if dist_next[0] <= dist_next[1]:
+        if storage['n'] <= 200*storage['risky']:
+            if dist_fields_next[0] + 50*dist_next[0] < dist_fields_next[1] + 50*dist_next[1]:
                 prefered_dir = 0
             else:
                 prefered_dir = 1
@@ -168,14 +164,27 @@ def load(stat, storage):
             #     else:
             #         prefered_dir = 1
 
-            if myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
+            elif myField[enemy_pos[0], enemy_pos[1]] % 10 == 1:
                 if dist_next[0] < dist_next[1]:
-                    prefered_dir = 1
-                else:
                     prefered_dir = 0
+                else:
+                    prefered_dir = 1
 
-            if storage['my_score'] > 100 + storage['enemy_score'] and dist_now < storage['dist_escape'][storage['ngame']]:
+            elif storage['my_score'] > 1000*storage['risky'] + storage['enemy_score'] and dist_now < storage['dist_escape'][storage['ngame']]:
                 if dist_blank_next[0] - storage['dist_escape'][storage['ngame']]*dist_fields_next[0] > dist_blank_next[1] - storage['dist_escape'][storage['ngame']]*dist_fields_next[1]:
+                    prefered_dir = 0
+                else:
+                    prefered_dir = 1
+
+            elif storage['my_score'] < storage['enemy_score']:
+                storage['conserv'] -= 1
+                if dist_fields_next[0] + 5*dist_next[0] < dist_fields_next[1] + 5*dist_next[1]:
+                    prefered_dir = 0
+                else:
+                    prefered_dir = 1
+
+            else:
+                if dist_fields_next[0] + 5*dist_next[0] < dist_fields_next[1] + 5*dist_next[1]:
                     prefered_dir = 0
                 else:
                     prefered_dir = 1
@@ -264,7 +273,7 @@ def load(stat, storage):
             storage['mode'] = 'square'
             storage['count'] = randrange(1, 3)
             storage['turn'] = dirs[storage['prefered_dir']]
-            storage['maxl'] = dist(me, storage['enemy'])
+            storage['maxl'] = dist(me, storage['enemy'], storage['conserv'])
             return ''
 
         # 随机前进，转向频率递减
@@ -304,24 +313,9 @@ def load(stat, storage):
                 if thedis < min_dis:
                     min_dis = thedis
                     near_eb = eb
-        if near_eb is not None and np.sum(np.abs(near_eb - my_pos)) <= 2 and np.prod(near_eb - my_pos) == 0:
+        if near_eb is not None and np.sum(np.abs(near_eb - my_pos)) <= 3 and np.prod(near_eb - my_pos) == 0:
             if np.matmul( (near_eb - my_pos), directions[me['direction']] ) > 0:
                 storage['maxl'] += 1
-        # 判断跑路
-        min_dis = 10000
-        near_mb = None
-        enemy_pos = storage['enemy_pos']
-        my_bands = np.r_[np.c_[np.where(myField == 2)], np.c_[np.where(myField == 23)]]
-        if my_bands.shape[0] > 0:
-            for mb in my_bands:
-                thedis = np.sum(np.abs(mb - enemy_pos))
-                if thedis < min_dis:
-                    min_dis = thedis
-                    near_mb = mb
-        if near_mb is not None and np.sum(np.abs(near_mb - enemy_pos)) <= 2 and np.prod(near_mb - enemy_pos) == 0:
-            if np.matmul( (near_mb - enemy_pos), directions[enemy['direction']] ) > 0:
-                storage['maxl'] -= 1
-
         # 画方块
         storage['count'] += 1
         if storage['count'] >= storage['maxl']:
@@ -351,9 +345,9 @@ def load(stat, storage):
                 thedis = np.sum(np.abs(ep - my_pos))
                 if thedis < min_dis:
                     min_dis = thedis
-            if hisDist < 10:
+            if hisDist < 5:
                 storage['conserv'] = 6
-            elif min_dis < hisDist / 4:
+            elif min_dis < hisDist / 2:
                 storage['conserv'] = 4
 
             storage['maxl'] = dist(me, storage['enemy'], storage['conserv'])
@@ -394,5 +388,7 @@ def summary(match_result, stat, storage):
     elif not win and match_result[1] != 3:
         storage['win'][storage['ngame'] - 1] = -99
         storage['dist_escape'][storage['ngame']] = last_dist + 3
+        storage['risky'] = 0.1
     elif not win and last_dist > 10:
         storage['dist_escape'][storage['ngame']] = last_dist - 2
+        storage['risky'] += 0.2

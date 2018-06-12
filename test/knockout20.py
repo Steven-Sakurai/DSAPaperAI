@@ -28,7 +28,7 @@ GAMES = 10  # 两两作为先后手各比赛场数，总场次为2*GAMES*n(n-1)
 HALFWIDTH = 51
 HEIGHT = 101
 ROUNDSPERGAME = 2000
-TIMELIMIT = 30
+TIMELIMIT = 60
 
 FOLDER = 'AI_waitlist'
 players = []
